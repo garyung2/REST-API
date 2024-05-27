@@ -41,7 +41,7 @@ ul {
 
 .primary-button {
   height: 42px;
-  border-radius: 5px;
+  border-radius: 0.5rem;
   background-color: #000;
 }
 
@@ -100,6 +100,6 @@ ul {
 .auth-form ul li input[type="password"] {
   width: 100%;
   height: 38px;
-  border-radius: 5px;
+  border-radius: 0.5rem;
   text-indent: 10px;
 }
