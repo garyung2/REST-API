@@ -1,7 +1,7 @@
 <script>
   import Header from "../components/header/Header.svelte";
   import Footer from "../components/Footer.svelte";
-  import AuthLogin from "../components/Auth/AuthLogin.svelte";
+  import AuthLogin from "../components/auth/AuthLogin.svelte";
 </script>
 
 <Header/>

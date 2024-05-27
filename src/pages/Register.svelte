@@ -1,5 +1,5 @@
 <script>
-  import AuthRegister from "../components/Auth/AuthRegister.svelte";
+  import AuthRegister from "../components/auth/AuthRegister.svelte";
 import Footer from "../components/Footer.svelte";
   import Header from "../components/header/Header.svelte";
 
