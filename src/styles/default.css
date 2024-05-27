@@ -2,9 +2,14 @@
 
 /**전체 레이아웃**/
 body {
+  -ms-overflow-style: none;
   background-color: #eceff1;
   letter-spacing: 1px;
   font-size: 1.4rem;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 a {
@@ -14,26 +19,26 @@ a {
 button,
 input {
   border: none;
+  background-color: transparent;
 }
 
 ul {
   list-style: none;
 }
-
-.container {
+.main {
   width: 100%;
-  height: 100%;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .main-inner {
+  width: 100%;
+  height: 100vh;
   padding: 5rem;
 }
 
 .container {
   width: 100%;
   height: 100%;
-  min-height: calc(100vh - 100px);
   border: 1px solid #000;
   border-left: none;
   border-right: none;
