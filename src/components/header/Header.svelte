@@ -31,7 +31,7 @@
          :&nbsp;post
        </a>
     </h1>  
-    {#if url === 'articles'}
+    {#if url === '/articles'}
       <ul class="filter">
         <li>
           <button class="text-button">
