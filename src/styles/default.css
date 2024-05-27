@@ -16,10 +16,13 @@ a {
   text-decoration: none;
 }
 
-button,
-input {
+button {
   border: none;
   background-color: transparent;
+}
+
+input {
+  border: none;
 }
 
 ul {
