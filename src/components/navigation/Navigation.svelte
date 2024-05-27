@@ -1,5 +1,6 @@
 <script>
 import moveText from './moveText';
+import {isLogin} from '../../stores';
 
 const navigations = [
   {name: 'login', direction: 'left', href:'/login'},
@@ -10,17 +11,29 @@ const navigations = [
 </script>
 
 <ul class="navigation">
-  {#each navigations as navigation, index}
-    <li class={navigation.direction}>
-      <span>0{index + 1}</span>
-      <a href={navigation.href}>
+  {#if $isLogin}
+    <li class="left">
+      <span>01</span>
+      <a href="/articles">
         <div class="animation-box" use:moveText>
-          <h2 class="normal">{navigation.name}</h2>
-          <h2 class="italic">{navigation.name}</h2>
+          <h2 class="normal">articles</h2>
+          <h2 class="italic">articles</h2>
         </div>
       </a>
     </li>
-  {/each}
+  {:else}
+    {#each navigations as navigation, index}
+      <li class={navigation.direction}>
+        <span>0{index + 1}</span>
+        <a href={navigation.href}>
+          <div class="animation-box" use:moveText>
+            <h2 class="normal">{navigation.name}</h2>
+            <h2 class="italic">{navigation.name}</h2>
+          </div>
+        </a>
+      </li>
+    {/each}
+  {/if}
 </ul>
 
 <style>
@@ -42,7 +55,6 @@ const navigations = [
   .navigation li span {
     position: absolute;  
     font-size: 1.6rem;
-    font-weight: 600;  
   }
 
   .navigation li a {

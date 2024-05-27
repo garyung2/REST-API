@@ -86,13 +86,13 @@ function setAuth() {
   };
 }
 
-// function setIsLogin() {
-//   const checkLogin = derived(auth, ($auth) =>
-//     $auth.Authorization ? true : false
-//   );
-//   return checkLogin;
-// }
+function setIsLogin() {
+  const checkLogin = derived(auth, ($auth) =>
+    $auth.Authorization ? true : false
+  );
+  return checkLogin;
+}
 
 export const auth = setAuth();
-// export const isLogin = setIsLogin();
+export const isLogin = setIsLogin();
 export const isRefresh = writable(false);

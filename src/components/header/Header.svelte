@@ -1,6 +1,7 @@
 <script>
+  import {router, meta} from "tinro";
   import {date} from './date';
-  import {auth} from '../../stores';
+  import {auth, isLogin} from '../../stores';
   
  // 날짜, 시간 포맷
  let options = {
@@ -14,6 +15,10 @@
 
   $: dateTime = $date.toLocaleString("en", options);
 
+  // url
+  const route = meta();
+  const url = $route.url;
+
   // 로그아웃
   const onLogout = () => auth.logout();
 </script>
@@ -26,14 +31,32 @@
          :&nbsp;post
        </a>
     </h1>  
-    <span>{dateTime}</span> 
-    <!-- {#if isLogin}
+    {#if url === 'articles'}
+      <ul class="filter">
+        <li>
+          <button class="text-button">
+            <span>All</span>
+          </button>
+        </li>
+        <li>
+          <button class="text-button">
+            <span>Likes</span>
+         </button>
+        </li>
+        <li>
+          <button class="text-button">
+            <span>My post</span>
+          </button>
+        </li>
+      </ul>
+    {/if}
+    {#if $isLogin}
       <button class="icon-button logout-button" on:click={onLogout}>
         <span>logout</span>
       </button>
     {:else}
       <span>{dateTime}</span> 
-    {/if} -->
+    {/if}
   </div>
 </header>
 <!--header end-->
@@ -62,7 +85,24 @@
     color: #fff;
   }
 
-  /* .logout-button span{
+  .filter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 2.4rem;
+  }
+
+  .filter li {
+    width: 78px;  
+  }
+
+  .filter li button {
+    width: 100%;  
+    height: 28px;
+    border-radius: 5px;
+  }
+
+  .logout-button span{
     background:url(../../../public/icons/logout.png) no-repeat  center center  / contain;
-  } */
+  }
 </style>
