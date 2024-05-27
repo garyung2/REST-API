@@ -99,7 +99,7 @@
   .filter li button {
     width: 100%;  
     height: 28px;
-    border-radius: 5px;
+    border-radius: 0.5rem;
   }
 
   .logout-button span{
