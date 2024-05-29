@@ -1,12 +1,43 @@
+<script>
+	import { articles } from './../../stores';
+  
 
+  const values = {
+    formContent: '',
+  }
+
+  const onAddArticle = async () => {
+    try {
+      await articles.addArticle(values.formContent);
+      onCancleAddArticles();
+      alert('새글이 등록되었습니다.');
+    } catch(error) {
+      alert(error);
+    }
+  }
+
+  const onCancleAddArticles = () => {
+    values.formContent = '';  
+  }
+</script>
 
 <div class="article-add-form">
   <div class="article-add-form-inner">
     <label for="message">Share your thoughts and feels now.</label>
-    <textarea id="message" placeholder="Enter your contents."></textarea>
+    <textarea id="message" placeholder="Enter your contents." bind:value={values.formContent}></textarea>
     <div class="buttons">
-      <button class="primary-button submin-button"><span>submit</span></button>
-      <button class="text-button cancel-button"><span>cancel</span></button>
+      <button 
+        class="primary-button submin-button" 
+        on:click={onAddArticle}
+      >
+        <span>submit</span>
+      </button>
+      <button 
+        class="text-button cancel-button" 
+        on:click={onCancleAddArticles}
+      >
+        <span>cancel</span>
+      </button>
     </div>
   </div>
 </div>
