@@ -99,11 +99,106 @@ function setArticles() {
     }
   };
 
+  const openMenuPopup = (id) => {
+    update((datas) => {
+      datas.menuPopup = id;
+      return datas;
+    });
+  };
+
+  const closeMenuPopup = () => {
+    update((datas) => {
+      datas.menuPopup = "";
+      return datas;
+    });
+  };
+
+  const openEditModeArticle = (id) => {
+    articles.closeMenuPopup();
+
+    update((datas) => {
+      datas.editMode = id;
+      return datas;
+    });
+  };
+
+  const closeEditModeArticle = () => {
+    update((datas) => {
+      datas.editMode = "";
+      return datas;
+    });
+  };
+
+  const updateArticle = async (article) => {
+    const access_token = get(auth).Authorization;
+
+    try {
+      const updateData = {
+        articleId: article.id,
+        content: article.content,
+      };
+
+      const options = {
+        path: "/articles",
+        data: updateData,
+        access_token: access_token,
+      };
+
+      const updateArticle = await putApi(options);
+
+      update((datas) => {
+        const newArticleList = datas.articleList.map((article) => {
+          if (article.id === updateArticle.id) {
+            article = updateArticle;
+          }
+          return article;
+        });
+
+        datas.articleList = newArticleList;
+        return datas;
+      });
+
+      articles.closeEditModeArticle();
+      alert("수정이 완료 되었습니다.");
+    } catch (error) {
+      alert("수정중에 오류가 발생햇습니다. 다시 시도해 주세요.");
+    }
+  };
+
+  const deleteArticle = async (id) => {
+    const access_token = get(auth).Authorization;
+
+    try {
+      const options = {
+        path: `/articles/${id}`,
+        access_token: access_token,
+      };
+
+      await delApi(options);
+
+      update((datas) => {
+        const newArticleList = datas.articleList.filter(
+          (article) => article.id !== id
+        );
+        datas.articleList = newArticleList;
+        return datas;
+      });
+    } catch (error) {
+      alert("삭제 중 오류가 발생했습니다. ");
+    }
+  };
+
   return {
     subscribe,
     fetchArticles,
     resetArticles,
     addArticle,
+    openMenuPopup,
+    closeMenuPopup,
+    openEditModeArticle,
+    closeEditModeArticle,
+    updateArticle,
+    deleteArticle,
   };
 }
 
