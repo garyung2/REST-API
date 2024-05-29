@@ -1,30 +1,33 @@
+<script>
+  export let article;
+</script>
 
 <div class="article">
   <div class="article-inner">
     <div class="article-top">
-      <h4>user1@user1.com</h4>
+      <h4>{article.userEmail}</h4>
       <button class="icon-button toggle-button">
         <span>toggle</span>
       </button>
     </div>
     <div class="content">
-      <p>content</p>
+      <p>{article.content}</p>
     </div>
     <ul class="detail">
       <li class="likes">
         <button class="icon-button">
           <span>likes</span>
         </button>
-        <span>0</span>
+        <span>{article.likeCount}</span>
       </li>
       <li class="comments">
         <button class="icon-button">
           <span>comments</span>
         </button>
-        <span>0</span>
+        <span>{article.commentCount}</span>
       </li>
       <li class="updated-on">
-        <span>1일 전</span>
+        <span>{article.createdAt}</span>
       </li>
     </ul>
   </div>

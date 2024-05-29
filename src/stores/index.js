@@ -2,6 +2,105 @@ import { writable, get, derived } from "svelte/store";
 import { getApi, putApi, delApi, postApi } from "../service/api.js";
 import { router } from "tinro";
 
+function setCurrentArticlesPage() {
+  const { subscribe, update, set } = writable(1);
+
+  const resetPage = () => set(1);
+
+  const increasePage = () => {
+    update((data) => (data = data + 1));
+    articles.fetchArticles();
+  };
+
+  return {
+    subscribe,
+    resetPage,
+    increasePage,
+  };
+}
+
+function setArticles() {
+  let initValues = {
+    articleList: [],
+    totalPageCount: 0,
+    menuPopup: "",
+    editMode: "",
+  };
+
+  const { subscribe, update, set } = writable({ ...initValues });
+
+  const fetchArticles = async () => {
+    loadingArticle.turnOnLoading();
+    const currentPage = get(currentArticlesPage);
+    let path = `/articles/?pageNumber=${currentPage}`;
+
+    try {
+      const access_token = get(auth).Authorization;
+
+      const options = {
+        path: path,
+        access_token: access_token,
+      };
+
+      const getDatas = await getApi(options);
+
+      const newData = {
+        articleList: getDatas.articleList,
+        totalPageCount: getDatas.totalPageCount,
+      };
+
+      update((datas) => {
+        if (currentPage === 1) {
+          datas.articleList = newData.articleList;
+          datas.totalPageCount = newData.totalPageCount;
+        } else {
+          const newArticles = [...datas.articleList, ...newData.articleList];
+          datas.articleList = newArticles;
+          datas.totalPageCount = newData.totalPageCount;
+        }
+
+        return datas;
+      });
+      loadingArticle.turnOffLoading();
+    } catch (error) {
+      loadingArticle.turnOffLoading();
+      throw error;
+    }
+  };
+
+  const resetArticles = () => {
+    set({ ...initValues });
+    currentArticlesPage.resetPage();
+    articlePageLock.set(false);
+  };
+
+  return {
+    subscribe,
+    fetchArticles,
+    resetArticles,
+  };
+}
+
+function setLoadingArticle() {
+  const { subscribe, set } = writable(false);
+
+  const turnOnLoading = () => {
+    set(true);
+    articlePageLock.set(true);
+  };
+
+  const turnOffLoading = () => {
+    set(false);
+    articlePageLock.set(false);
+  };
+
+  return {
+    subscribe,
+    turnOnLoading,
+    turnOffLoading,
+  };
+}
+
 function setAuth() {
   let initValues = {
     id: "",
@@ -93,6 +192,10 @@ function setIsLogin() {
   return checkLogin;
 }
 
+export const currentArticlesPage = setCurrentArticlesPage();
+export const articles = setArticles();
+export const articlePageLock = writable(false);
+export const loadingArticle = setLoadingArticle();
 export const auth = setAuth();
 export const isLogin = setIsLogin();
 export const isRefresh = writable(false);
