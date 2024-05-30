@@ -1,6 +1,6 @@
 <script>
   export let article;
-	import { articles, auth } from './../../stores/index.js';
+	import { articles, auth, isLogin } from './../../stores/index.js';
   import ArticleEditForm from './ArticleEditForm.svelte';
   import {router} from 'tinro';
 
@@ -37,6 +37,17 @@
     router.goto(`/articles/comments/${id}`)
   }
 
+  const onLike = (id) => {
+    if($isLogin){
+      articles.likeArticle(id);
+    }
+  }
+
+  const onCancelLike = (id) => {
+    if($isLogin){
+      articles.cancelLikeArticle(id);
+    }
+  }
 </script>
 
 {#if $articles.editMode === article.id}
@@ -67,9 +78,15 @@
       </div>
       <ul class="detail">
         <li class="likes">
-          <button class="icon-button">
-            <span>likes</span>
-          </button>
+          {#if article.likeMe}
+            <button class="icon-button like-button" on:click={() => onCancelLike(article.id)}>
+              <span>likes</span>
+            </button>
+          {:else}
+            <button class="icon-button cancel-like-button" on:click={() => onLike(article.id)}>
+              <span>likes</span>
+            </button>
+          {/if}
           <span>{article.likeCount}</span>
         </li>
         <li class="comments">
@@ -169,8 +186,12 @@
     font-size: 1.6rem;
   }
   
-  .likes button span {
-    background: url(../../../public/icons/likes.png) no-repeat center center / contain;
+  .like-button span {
+    background: url(../../../public/icons/like.png) no-repeat center center / contain;
+  }
+
+  .cancel-like-button span {
+    background: url(../../../public/icons/cancel-like.png) no-repeat center center / contain;
   }
 
   .comments button span {
