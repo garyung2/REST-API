@@ -63,7 +63,7 @@
 
   .article-add-form-inner textarea {
     width: 100%;
-    height: 150px;  
+    min-height: 150px;  
     padding: 1rem;
     font-size: 1.4rem;
   }
