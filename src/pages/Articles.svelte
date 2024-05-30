@@ -2,8 +2,10 @@
   import Header from "../components/header/Header.svelte";
   import ArticleAddForm  from "../components/articles/ArticleAddForm.svelte";
   import ArticleList  from "../components/articles/ArticleList.svelte";
+  import Comments from "./Comments.svelte";
   import Footer from "../components/Footer.svelte";
   import {isLogin} from '../stores';
+  import { Route } from "tinro";
 </script>
 
 <Header/>
@@ -14,6 +16,9 @@
         <ArticleAddForm />
       {/if}
       <ArticleList />
+      <Route path="/comments/:id">
+        <Comments />
+      </Route>
     </div>
   </div>
 </main>

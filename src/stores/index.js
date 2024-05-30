@@ -188,6 +188,33 @@ function setArticles() {
     }
   };
 
+  const increaseArticleCommentCount = (articleId) => {
+    update((datas) => {
+      const newArticleList = datas.articleList.map((article) => {
+        if (article.id === articleId) {
+          article.commentCount = article.commentCount + 1;
+        }
+        return article;
+      });
+      datas.articleList = newArticleList;
+      return datas;
+    });
+  };
+
+  const decreaseArticleCommentCount = (articleId) => {
+    update((datas) => {
+      const newArticleList = datas.articleList.map((article) => {
+        if (article.id === articleId) {
+          article.commentCount = article.commentCount - 1;
+        }
+        return article;
+      });
+
+      datas.articleList = newArticleList;
+      return datas;
+    });
+  };
+
   return {
     subscribe,
     fetchArticles,
@@ -199,6 +226,8 @@ function setArticles() {
     closeEditModeArticle,
     updateArticle,
     deleteArticle,
+    increaseArticleCommentCount,
+    decreaseArticleCommentCount,
   };
 }
 
@@ -219,6 +248,106 @@ function setLoadingArticle() {
     subscribe,
     turnOnLoading,
     turnOffLoading,
+  };
+}
+
+function setArticleContent() {
+  let initValues = {
+    id: "",
+    userId: "",
+    userEmail: "",
+    content: "",
+    createdAt: "",
+    commentCount: 0,
+    likeCount: 0,
+    likeUsers: [],
+  };
+
+  const { subscribe, set } = writable({ ...initValues });
+
+  const getArticle = async (id) => {
+    try {
+      const options = {
+        path: `/articles/${id}`,
+      };
+
+      const getDatas = await getApi(options);
+      set(getDatas);
+    } catch (error) {
+      alert("오류가 발생했습니다. 다시 시도해 주세요.");
+    }
+  };
+
+  return {
+    subscribe,
+    getArticle,
+  };
+}
+
+function setComments() {
+  const { subscribe, update, set } = writable([]);
+
+  const fetchComments = async (id) => {
+    try {
+      const options = {
+        path: `/comments/${id}`,
+      };
+
+      const getDatas = await getApi(options);
+      set(getDatas.comments);
+    } catch (error) {
+      alert("오류가 발생했습니다. 다시 시도해 주세요.");
+    }
+  };
+
+  const addComment = async (articleId, commentContent) => {
+    const access_token = get(auth).Authorization;
+
+    try {
+      const options = {
+        path: "/comments",
+        data: {
+          articleId: articleId,
+          content: commentContent,
+        },
+        access_token: access_token,
+      };
+
+      const newData = await postApi(options);
+      update((datas) => [...datas, newData]);
+      articles.increaseArticleCommentCount(articleId);
+    } catch (error) {
+      alert("오류가 발생했습니다. 다시 시도해 주세요.");
+    }
+  };
+
+  const deleteComment = async (commentId, articleId) => {
+    const access_token = get(auth).Authorization;
+
+    try {
+      const options = {
+        path: "/comments",
+        data: {
+          commentId: commentId,
+          articleId: articleId,
+        },
+        access_token: access_token,
+      };
+
+      await delApi(options);
+      update((datas) => datas.filter((comment) => comment.id !== commentId));
+      articles.decreaseArticleCommentCount(articleId);
+      alert("댓글이 삭제 되었습니다.");
+    } catch (error) {
+      alert("삭제 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    }
+  };
+
+  return {
+    subscribe,
+    fetchComments,
+    addComment,
+    deleteComment,
   };
 }
 
@@ -317,6 +446,8 @@ export const currentArticlesPage = setCurrentArticlesPage();
 export const articles = setArticles();
 export const articlePageLock = writable(false);
 export const loadingArticle = setLoadingArticle();
+export const articleContent = setArticleContent();
+export const comments = setComments();
 export const auth = setAuth();
 export const isLogin = setIsLogin();
 export const isRefresh = writable(false);

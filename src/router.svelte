@@ -11,4 +11,4 @@
 <Route path="/home"><Home /></Route>
 <Route path="/login"><Login/></Route>
 <Route path="/register"><Register/></Route>
-<Route path="/articles"><Articles/></Route>
+<Route path="/articles/*"><Articles/></Route>
