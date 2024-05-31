@@ -1,5 +1,8 @@
 <script>
+	import { registerValidate, extractErrors } from './../../utils/validates.js';
   import {auth} from '../../stores';
+
+  let errors = {}
 
   let values = {
     formEmail: '',
@@ -9,9 +12,15 @@
 
   const onRegister = async() => {
     try {
+      await registerValidate.validate(values, {abortEarly: false})
       await auth.register(values.formEmail, values.formPassword);
     } catch(error) {
-      alert('회원가입에 실패했습니다. 다시 시도해 주세요.');
+      //alert('회원가입에 실패했습니다. 다시 시도해 주세요.');
+
+      errors = extractErrors(error)
+      if(errors.formEmail) alert(errors.formEmail)
+      if(errors.formPassword) alert(errors.formPassword)
+      if(errors.formPasswordConfirm) alert(errors.formPasswordConfirm)
     } 
   }
 </script>
@@ -35,6 +44,7 @@
               name="email" 
               id="email"  
               bind:value={values.formEmail}
+              class:wrong={errors.formEmail}
             />
           </li>
           <li>
@@ -45,6 +55,7 @@
               id="password" 
               autoComplete="off"  
               bind:value={values.formPassword}
+              class:wrong={errors.formPassword}
             />
           </li>
           <li>
@@ -55,6 +66,7 @@
               id="confirm-password" 
               autoComplete="off"  
               bind:value={values.formPasswordConfrim}
+              class:wrong={errors.formPasswordConfirm}
             />
           </li>
           <li>
@@ -98,4 +110,7 @@
       text-align: center;
     }
 
+    .wrong {
+      border-bottom: 1px solid red;  
+   }
   </style>

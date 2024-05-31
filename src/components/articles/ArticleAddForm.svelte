@@ -1,6 +1,8 @@
 <script>
 	import { articles } from './../../stores';
+  import { contentValidate, extractErrors } from '../../utils/validates';
   
+  let errors = {}
 
   const values = {
     formContent: '',
@@ -8,11 +10,13 @@
 
   const onAddArticle = async () => {
     try {
+      await contentValidate.validate(values, {abortEarly: false})
       await articles.addArticle(values.formContent);
       onCancleAddArticles();
-      alert('새글이 등록되었습니다.');
     } catch(error) {
-      alert(error);
+      //alert(error);
+      errors = extractErrors(error)
+      if(errors.formContent) alert(errors.formContent)
     }
   }
 

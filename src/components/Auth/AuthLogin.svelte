@@ -1,5 +1,8 @@
 <script>
+	import { loginValidate, extractErrors } from './../../utils/validates.js';
   import {auth} from '../../stores';
+
+  let errors ={}
 
   let values ={
     formEmail: "",
@@ -13,10 +16,14 @@
 
   const onLogin = async() => {
     try {
+      await loginValidate.validate(values, {abortEarly: false})
       await auth.login(values.formEmail, values.formPassword)
       resetValues();  
     }catch(error) {
-      alert('인증이 되지 않았습니다. 다시 시도해 주세요.');
+      //alert('인증이 되지 않았습니다. 다시 시도해 주세요.');
+      errors = extractErrors(error)
+      if(errors.formEmail) alert(errors.formEmail)
+      if(errors.formPassword) alert(errors.formPassword)
     }
   }
 
@@ -41,6 +48,7 @@
             name="email" 
             id="email"  
             bind:value={values.formEmail}
+            class:wrong={errors.formEmail}
           />
         </li>
         <li>
@@ -51,6 +59,7 @@
             id="password" 
             autoComplete="off"  
             bind:value={values.formPassword}
+            class:wrong={errors.formPassword}
           />
         </li>
         <li>
@@ -108,5 +117,9 @@
 
   .auth-form ul li:last-child {
     margin-bottom: 0;
+  }
+
+  .wrong {
+    border-bottom: 1px solid red;  
   }
 </style>
