@@ -1,8 +1,9 @@
 <script>
   import {router, meta} from "tinro";
   import {date} from './date';
-  import {auth, isLogin} from '../../stores';
-  
+  import {auth, isLogin, articlesMode, articles} from '../../stores';
+  import {ALL, LIKE, MY} from "../../utils/constant";
+
  // 날짜, 시간 포맷
  let options = {
     day: "2-digit",
@@ -18,6 +19,11 @@
   // url
   const route = meta();
   const url = $route.url;
+ 
+  // 보기 모드
+  const onChangeMode = (mode) => {
+    if($articlesMode !== mode) articlesMode.changeMode(mode)
+  }
 
   // 로그아웃
   const onLogout = () => auth.logout();
@@ -34,20 +40,33 @@
     {#if url === '/articles'}
       <ul class="filter">
         <li>
-          <button class="text-button">
+          <button class="text-button" on:click={() => onChangeMode(ALL)}>
             <span>All</span>
           </button>
         </li>
-        <li>
-          <button class="text-button">
-            <span>Likes</span>
-         </button>
-        </li>
-        <li>
-          <button class="text-button">
-            <span>My post</span>
-          </button>
-        </li>
+        {#if $isLogin}
+          <li>
+            <button class="text-button" on:click={() => onChangeMode(LIKE)}>
+              <span>Likes</span>
+           </button>
+          </li>
+          <li>
+            <button class="text-button" on:click={() => onChangeMode(MY)}>
+              <span>My post</span>
+            </button>
+          </li>
+        {:else}
+          <li>
+            <button class="text-button">
+              <span>Likes</span>
+           </button>
+          </li>
+          <li>
+            <button class="text-button">
+              <span>My post</span>
+            </button>
+          </li>
+        {/if}
       </ul>
     {/if}
     {#if $isLogin}
