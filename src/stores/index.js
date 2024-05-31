@@ -73,7 +73,12 @@ function setArticles() {
           datas.totalPageCount = newData.totalPageCount;
         } else {
           const newArticles = [...datas.articleList, ...newData.articleList];
-          datas.articleList = newArticles;
+          //datas.articleList = newArticles;
+          const uniqueArray = newArticles.filter(
+            (array, index, callback) =>
+              index === callback.findIndex((t) => t.id === array.id)
+          );
+          datas.articleList = uniqueArray;
           datas.totalPageCount = newData.totalPageCount;
         }
 
